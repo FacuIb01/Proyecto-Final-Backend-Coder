@@ -3,6 +3,9 @@ const express = require('express');
 const productos = express.Router();
 const carritos = express.Router();
 
+const {carritoDao, productoDAO} = require("..//src//daos/export")
+
+
 /*****************/
 /***DAOCARRITOS**/
 /*****************/
@@ -13,8 +16,8 @@ const carritos = express.Router();
 // const DAOCarritoMongoDB = require("../src/daos/carritos/DAOcarritoMongoDB.js")
 // const carritoDao = new DAOCarritoMongoDB()
 
-const DAOCarritoArchivo = require("../src/daos/carritos/DAOCarritoArchivo.js")
-const carritoDao = new DAOCarritoArchivo()
+// const DAOCarritoArchivo = require("../src/daos/carritos/DAOCarritoArchivo.js")
+// const carritoDao = new DAOCarritoArchivo()
 
 /*****************/
 /***DAOCARRITOS**/
@@ -33,8 +36,8 @@ const carritoDao = new DAOCarritoArchivo()
 // const DAOMongoDB = require("../src/daos/productos/DAOProductosMongoDB.js")
 // const productoDAO = new DAOMongoDB()
 
-const DAOArchivo = require("../src/daos/productos/DAOProductosArchivo.js")
-const productoDAO = new DAOArchivo()
+// const DAOArchivo = require("../src/daos/productos/DAOProductosArchivo.js")
+// const productoDAO = new DAOArchivo()
 
 
 /*****************/
@@ -121,7 +124,7 @@ carritos.post("/", async (req, res)=> {
     } catch (error) {
         res.json({
             mensaje: "Error al ingresar el carrito",
-            error: err.message
+            error: error.message
         })
     }
 })

@@ -1,12 +1,12 @@
 let admin = require("firebase-admin");
+const {Firebase} = require("..//config//global")
+const FIREBASE_PATH = require(Firebase)
 
-let serviceAccount = require("../coderhouse-backend-756db-firebase-adminsdk-n873t-3255792cbf.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(FIREBASE_PATH),
 });
 
-console.log("Firebase Inicializado");
 
 const db = admin.firestore()
 

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-const MongoUri = "mongodb://localhost:27017/ecommerce"
+const {mongoUri} = require("../config/global")
+
 
 
 class ContenedorMongo {
     constructor(model) {
-        mongoose.connect(MongoUri, {useNewUrlParser: true, useUnifiedTopology: true})
+        mongoose.connect(mongoUri, {useNewUrlParser: true, useUnifiedTopology: true})
         console.log("Conectado a MongoDB")
         this.model = model
 

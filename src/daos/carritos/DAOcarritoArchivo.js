@@ -113,8 +113,6 @@ class DAOcarritoArchivo extends Carrito{
     
 }
 
-let dao = new DAOcarritoArchivo()
-
 
 
 
