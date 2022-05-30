@@ -1,48 +1,14 @@
 const fs = require('fs');
 const { json } = require('stream/consumers');
 
-class Productos {
+
+class ContenedorArchivo {
     constructor(ruta) {
         this.id = 1,
         this.ruta = ruta;
     }
 
-    save(objeto, codigo){
-        let data = fs.readFileSync(this.ruta, 'utf8');
-        objeto.id = this.id;
-        objeto.codigo = codigo 
-        if(data.length == 0){
-            let array = [objeto];
-            fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));
-        }
-        else{
-            let array = JSON.parse(data);
-            array.push(objeto);
-            fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));
-        }
-        this.id++
-    }
 
-    update(id, objetoNuevo){
-        
-        let data = fs.readFileSync(this.ruta, 'utf8');
-        try{
-            let array = JSON.parse(data);
-            let objeto = array.find(obj => obj.id === id);
-            if(objeto == undefined){
-                throw "Ingrese un id valido"
-            }else{
-                let index = array.indexOf(objeto);
-                let objetoViejo = array[index];
-                objetoViejo.nombre = objetoNuevo.nombre;
-                objetoViejo.precio = objetoNuevo.precio;
-                objetoViejo.img = objetoNuevo.img;
-                fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));
-            }
-        }catch(err){
-            return console.log("algo fallo!, solucionalo crack, te dejo el error: \n" + err);
-        }
-    }
 
     getById(id){
         let data = fs.readFileSync(this.ruta, 'utf8');
@@ -87,5 +53,5 @@ class Productos {
     }
 }
 
-module.exports = Productos;
+module.exports = ContenedorArchivo
 

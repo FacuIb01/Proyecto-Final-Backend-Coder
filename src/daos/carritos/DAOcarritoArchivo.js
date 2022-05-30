@@ -1,17 +1,17 @@
 const fs = require('fs');
-const { json } = require('stream/consumers');
+const Carrito = require(`../../Contenedores/contenedorArchivos.js`)
+///No pude hacer que me lo requiera bien xd cambiar el path al usar.
 
 
-class Carrito {
-    constructor (ruta) {
-        this.id = 1;
-        this.ruta = ruta;
+class DAOcarritoArchivo extends Carrito{
+    constructor(){
+        super("db/carrito.json") //cambiar el path
     }
 
-    crear(){
+    save(){
         let carrito = {
             id:this.id,
-            thimestamp: Date.now(),
+            timestamp: Date.now(),
             productos: []
         }
         try{
@@ -110,8 +110,12 @@ class Carrito {
             console.log(err)
         }
     }
+    
 }
 
+let dao = new DAOcarritoArchivo()
 
 
-module.exports = Carrito
+
+
+module.exports = DAOcarritoArchivo
