@@ -1,6 +1,7 @@
 const ContenedorFB = require('../../Contenedores/contenedorFireBase.js')
 
 
+
 class CarritoFB extends ContenedorFB{
     constructor(){
         super("carritos")

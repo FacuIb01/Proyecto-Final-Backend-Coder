@@ -1,5 +1,6 @@
 const schemaCarrito = require('../../models/schemaCarrito');
 const ContenedorMongo = require("../../Contenedores/contenedorMongoDB");
+const {logError, logConsola} = require("../../logs/log4js");
 
 
 class DAOcarrito extends ContenedorMongo{
@@ -24,7 +25,7 @@ class DAOcarrito extends ContenedorMongo{
             await this.model.create(carrito)
             this.id++
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
     async añadirProducto(id, producto){
@@ -34,7 +35,7 @@ class DAOcarrito extends ContenedorMongo{
                 productos.push(producto)
                 await this.model.updateOne({id: id}, {productos: productos})
             }catch(err){
-                console.log(err)
+                logError.error(err);
             }
     }
 
@@ -44,7 +45,7 @@ class DAOcarrito extends ContenedorMongo{
             let productos = carrito[0].productos
             return productos
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -56,7 +57,7 @@ class DAOcarrito extends ContenedorMongo{
             await this.model.updateOne({id:idCarrito}, {productos: carrito[0].productos})
             return "borrado"
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 

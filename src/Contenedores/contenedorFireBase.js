@@ -1,6 +1,7 @@
 let admin = require("firebase-admin");
 const {Firebase} = require("..//config//global")
 const FIREBASE_PATH = require(Firebase)
+const {logError, logConsola} = require("../logs/log4js")
 
 
 admin.initializeApp({
@@ -48,7 +49,7 @@ class ContenedorFB{
             let doc = await docById.get()
             return doc.data()
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -56,9 +57,9 @@ class ContenedorFB{
         try {
             let docUpdate = this.collection.doc(`${id}`)
             let actualizar = await docUpdate.update(actualizacion) 
-            console.log("Estudiante actualizado: ", actualizar);
+            logConsola.info("Estudiante actualizado: ", actualizar);
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -68,7 +69,7 @@ class ContenedorFB{
             let borrado = await docDelete.delete()
             return true
         } catch (error) {
-            console.log(error)
+            logError.error(err);
             return false
         }
     }

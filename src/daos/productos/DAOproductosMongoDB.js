@@ -1,5 +1,6 @@
 const productosSchema = require('../../models/schemaProductos');
 const ContenedorMongoDB = require('../../Contenedores/contenedorMongoDB');
+const { logError, logConsola } = require('../../logs/log4js');
 
 class DAOproductosMongoDB extends ContenedorMongoDB{
     constructor(){
@@ -18,13 +19,11 @@ class DAOproductosMongoDB extends ContenedorMongoDB{
     async save(producto){
         try {
             producto.id = this.id
-            console.log(producto);
             let productoAGuardar = await this.model.create(producto)
-            console.log("Guardado", productoAGuardar)
-
+            logConsola.info("Guardado" + productoAGuardar)
             this.id++
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 }

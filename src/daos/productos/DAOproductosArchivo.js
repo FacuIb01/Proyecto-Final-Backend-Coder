@@ -14,7 +14,7 @@ class DAOproductosArchivo extends ContenedorArchivo{
             fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));
             this.id++
         }catch(error){
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -35,7 +35,7 @@ class DAOproductosArchivo extends ContenedorArchivo{
                 fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));
             }
         }catch(err){
-            return console.log("algo fallo!, solucionalo crack, te dejo el error: \n" + err);
+            return logError.error(err);
         }
     }
 }

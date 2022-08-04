@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Carrito = require(`../../Contenedores/contenedorArchivos.js`)
-///No pude hacer que me lo requiera bien xd cambiar el path al usar.
+const {logError, logConsola} = require("../../logs/log4js")
 
 
 class DAOcarritoArchivo extends Carrito{
@@ -29,7 +29,7 @@ class DAOcarritoArchivo extends Carrito{
             this.id++
             return carrito.id
         }catch(error){
-            console.log(error)
+            logError.error(err);
         }
         }
 
@@ -42,7 +42,7 @@ class DAOcarritoArchivo extends Carrito{
             }else{
                 let carrito = carritos.find(obj => obj.id === id)
                 if(carrito === undefined){
-                    console.log("Producto inexistente")
+                    logError.error("producto inexistente");
                 }else{
                     let index = carritos.indexOf(carrito)
                     carritos.splice(index,1)
@@ -50,7 +50,7 @@ class DAOcarritoArchivo extends Carrito{
                 }
             }
         }catch(error){
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -65,7 +65,7 @@ class DAOcarritoArchivo extends Carrito{
                 return carrito.productos
             }
         }catch(err){
-            console.log(err)
+            logError.error(err);
         }
     }
 
@@ -81,7 +81,7 @@ class DAOcarritoArchivo extends Carrito{
                 fs.writeFileSync(this.ruta, JSON.stringify(carritos, null, 2))
             }
         }catch(err){
-            console.log(err)
+            logError.error(err);
         }
     }
 
@@ -107,7 +107,7 @@ class DAOcarritoArchivo extends Carrito{
                 }
             }
         }catch(err){
-            console.log(err)
+            logError.error(err);
         }
     }
     

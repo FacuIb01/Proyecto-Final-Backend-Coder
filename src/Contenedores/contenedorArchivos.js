@@ -1,6 +1,5 @@
 const fs = require('fs');
-const { json } = require('stream/consumers');
-
+const {logError, logConsola} = require("../logs/log4js")
 
 class ContenedorArchivo {
     constructor(ruta) {
@@ -20,7 +19,7 @@ class ContenedorArchivo {
             }
             return objeto
         }catch(err){
-            return console.log("algo fallo!, solucionalo crack, te dejo el error: \n" + err);
+            return logError.error(err);
         }
     }
 
@@ -31,7 +30,7 @@ class ContenedorArchivo {
             let array = JSON.parse(data);
             return array
         }catch(err){
-            return console.log("algo fallo!, solucionalo crack, te dejo el error: \n" + err);
+            return logError.error(err);
         }
     }
     

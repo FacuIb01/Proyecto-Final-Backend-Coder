@@ -1,28 +1,293 @@
 const express = require('express');
-const { productos, carritos } = require('../routes/routes.js');
+const session = require('express-session');
+const { productos, carritos } = require('./routes/routes.js');
+const MongoStore = require('connect-mongo');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const UserModel = require('./models/usuariosModel');
+const multer = require('multer');
+const cluster = require('cluster');
+const {mongoUri, modo, PORT} = require('./config/global.js')
+const handlebars = require('express-handlebars');
+const path = require('path');
+const createHash = require('./utils/hashGenerator');
+const {passValidator} = require('./utils/passValidator');
+const {sendEmailRegister} = require('./utils/sendEmail');
+const {sendEmailCarrito} = require('./utils/sendEmail.js');
+const {sendSms, sendWsp} = require('./utils/sendMessage.js');
+const {logError, logConsola} = require('./logs/log4js');
+
+const advancedOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}
+
 const app = express();
 
 
+if(cluster.isMaster && modo === 'cluster'){
+    const cpus = require('os').cpus().length;
+    for(let i = 0; i < cpus; i++){
+        cluster.fork();
+    }
+
+    cluster.on('exit', (worker, code, signal) => {
+        cluster.fork()
+    }
+)}else{
+    app.listen(PORT, () => {
+        logConsola.info(`Servidor corriendo en el puerto ${PORT}`)
+    })
+}
+
+
+
+//************** */
+//**** MULTER*****/
+//************** */
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, 'public/uploads'))
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const upload = multer({ storage: storage })
+
+
+
+//************** */
+//**** MULTER*****/
+//************** */
+
+//************** */
+//**** HANDLEBARS*****/
+//************** */
+
+app.engine("hbs", handlebars.engine({
+    extname: ".hbs", ///extension of the file
+    defaultLayout: "index.hbs", ///layout por defecto
+    layoutsDir: __dirname + "/views/layouts",  ///ruta de los layouts
+    partialDir: __dirname + "/views/partials", ///ruta de los partials
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+    }
+}))
+
+app.set('view engine', 'hbs');
+app.set('views', __dirname + "/views");
+
+//************** */
+//**** HANDLEBARS*****/
+//************** */
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api/productos", productos);
 app.use("/api/carrito", carritos)
 
-app.listen(8080, ()=>{
-    console.log("Servidor corriendo en el puerto 8080")
+//******************** */
+//*******PASSPORT***** */
+//******************** */
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: mongoUri,
+        mongoOptions: advancedOptions,
+        ttl: 6000,
+    }),
+    secret: "coder",
+    resave: true,
+    saveUninitialized: true
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
+passport.use('login', new LocalStrategy ({usernameField: "email"},(email, password, callback) => {
+    try{
+        UserModel.findOne({ email: email }, (err, user) => {
+            if (err) {
+                return callback(err);
+            }
+            if (!user) {
+                return callback(null, false);
+            }
+            if (!passValidator(user,password )) {
+                return callback(null, false);
+            }
+            return callback(null, user);
+        }
+        )
+    }catch(err){
+        logError.error(err);
+    }
+}))
+
+passport.use("signup", new LocalStrategy({passReqToCallback: true},(req, username, password, callback)=>{
+    try {
+        UserModel.findOne({username:username}, (err, user)=>{
+            
+            if(err){
+                return callback(err)
+            }
+            if(user){
+                logError.error("El usuario ya existe");
+                return callback(null, false)
+            }
+    
+    
+            const newUser = {
+                email: req.body.email,
+                password: createHash(password),
+                username: username,
+                direccion: req.body.direccion,
+                edad: req.body.edad,
+                numero: req.body.numero,
+                avatar: req.file.originalname,
+            }
+    
+            UserModel.create(newUser, (err, usuarioConId)=>{
+                if (err) {
+                    logError.error("Hay un error al crear el usuario");
+                    return callback(err)
+                }
+    
+                logConsola.info("Usuario registrado con éxito");
+                return callback(null, usuarioConId)
+            })
+
+            sendEmailRegister(newUser)
+    
+        })
+        
+    } catch (error) {
+        logError.error(err);
+    }
+}))
+
+
+passport.serializeUser((user, callback) => {
+    callback(null, user._id)
 })
 
+passport.deserializeUser((id, callback) => {
+    UserModel.findById(id, callback)
+})
+
+
+//******************** */
+//*******PASSPORT***** */
+//******************** */
 
 
 app.use(function (err, req, res, next) {
-    console.error(err.stack)
     res.status(500).json({
         mensaje: "Error interno del servidor",
         error:  err.message
-
+        
     })
 })
+
+
+//rutas login y register
+
+app.get("/", (req, res) => {
+    if(req.isAuthenticated()){
+        res.redirect("/home")
+    }else{
+        res.render("login")
+    }
+})
+
+app.post("/login", passport.authenticate("login", {failureRedirect: "/failLogin"}), (req, res)=>{
+    if(req.isAuthenticated()){
+        res.redirect("/home")
+    }else{
+        res.redirect("/")
+    }
+})
+
+app.get("/failLogin", (req, res)=>{
+    res.render("failLogin")
+})
+
+app.get("/home", (req, res)=>{
+    if(req.isAuthenticated()){
+        res.render("home", {user: req.user})
+    }else{
+        res.redirect("/")
+    }
+})
+
+
+app.get("/carrito", (req, res)=>{
+    if(req.isAuthenticated()){
+        res.render("carrito")
+    }else{
+        res.redirect("/")
+    }
+})
+
+app.get("/logout", (req, res)=>{
+    req.logout((err) => {
+        if(!err){
+            res.redirect("/")
+        }
+    })
+    
+})
+
+app.get("/productos", (req, res)=>{
+    if(req.isAuthenticated()){
+        res.render("productos")
+    }else{
+        res.redirect("/")
+    }
+})
+
+
+
+app.get("/register", (req, res) => {
+    res.render("register")
+})
+
+
+app.post("/register",upload.single("avatar"), passport.authenticate("signup", {failureRedirect: "/failRegister"}), (req, res)=>{
+    res.redirect("/home")
+})
+
+
+app.get("/failRegister", (req, res) => {
+    res.render("failRegister")
+})
+
+
+app.post("/finalizarCompra", async (req, res)=> {
+    try {
+        const carrito = req.body
+        const usuario = req.user
+        sendEmailCarrito(usuario, carrito.carrito)
+        sendWsp(usuario, carrito.carrito)
+        sendSms(usuario)
+        res.send("Compra Finalizada!")
+    }catch(err){
+        logError.error(err);
+    }
+})
+
+app.get("/compraFinalizada", (req, res)=>{
+    res.render("compraFinalizada")
+})
+
+//rutas login y register
 
 app.get("*", (req, res)=>{
     res.json({
@@ -32,3 +297,4 @@ app.get("*", (req, res)=>{
         metodo: req.method
     })
 })
+

@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 const {mongoUri} = require("../config/global")
+const logjs = require("../logs/log4js");
+const {logError, logConsola} = require("../logs/log4js");
+
 
 
 
 class ContenedorMongo {
     constructor(model) {
         mongoose.connect(mongoUri, {useNewUrlParser: true, useUnifiedTopology: true})
-        console.log("Conectado a MongoDB")
+        logConsola.info("Conectado a MongoDB")
         this.model = model
 
     }
@@ -18,7 +21,7 @@ class ContenedorMongo {
             let productos = await this.model.find()
             return productos
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -27,7 +30,7 @@ class ContenedorMongo {
             let producto = await this.model.find({"id": id})
             return producto[0]
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 
@@ -37,7 +40,7 @@ class ContenedorMongo {
         try{
             let producto = await this.model.updateOne({id: id}, {$set: updates})
         }catch(err){
-            console.log(err)
+            logError.error(err);
         }
     }
 
@@ -45,7 +48,7 @@ class ContenedorMongo {
         try {
             let borrar = await this.model.deleteOne({id: id})
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 

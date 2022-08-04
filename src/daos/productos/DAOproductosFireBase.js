@@ -1,4 +1,6 @@
 const ContenedorFB = require('../../Contenedores/contenedorFireBase');
+const { logError } = require('../..//logs/log4js');
+
 
 class DAOfireBase extends ContenedorFB{
     constructor(){
@@ -20,7 +22,7 @@ class DAOfireBase extends ContenedorFB{
             await doc.create(producto)
             this.id++
         } catch (error) {
-            console.log(error)
+            logError.error(err);
         }
     }
 }
