@@ -2,7 +2,7 @@ let div = document.getElementById("productos");
 let productoss = ""
 
 async function productos () {
-    fetch("/api/productos/productoss").then(res => res.json()).then(productos => {
+    fetch("/api/productos/").then(res => res.json()).then(productos => {
         productos.forEach((producto, index) => {
             div.innerHTML += `<div class="card" style="width: 18rem;">
             <img src="{{img}}" class="card-img-top" alt="...">

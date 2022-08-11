@@ -1,11 +1,11 @@
 const express = require('express');
 const session = require('express-session');
-const { productos, carritos } = require('./routes/routes.js');
+const carritos  = require('./routes/carritoRouter.js');
+const productos = require('./routes/productosRouter.js');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const UserModel = require('./models/usuariosModel');
-const multer = require('multer');
 const cluster = require('cluster');
 const {mongoUri, modo, PORT} = require('./config/global.js')
 const handlebars = require('express-handlebars');
@@ -13,9 +13,9 @@ const path = require('path');
 const createHash = require('./utils/hashGenerator');
 const {passValidator} = require('./utils/passValidator');
 const {sendEmailRegister} = require('./utils/sendEmail');
-const {sendEmailCarrito} = require('./utils/sendEmail.js');
-const {sendSms, sendWsp} = require('./utils/sendMessage.js');
+
 const {logError, logConsola} = require('./logs/log4js');
+const usuariosRouter = require('./routes/usuariosRouter');
 
 const advancedOptions = {
     useNewUrlParser: true,
@@ -43,27 +43,6 @@ if(cluster.isMaster && modo === 'cluster'){
 
 
 //************** */
-//**** MULTER*****/
-//************** */
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, 'public/uploads'))
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
-
-const upload = multer({ storage: storage })
-
-
-
-//************** */
-//**** MULTER*****/
-//************** */
-
-//************** */
 //**** HANDLEBARS*****/
 //************** */
 
@@ -88,12 +67,6 @@ app.set('views', __dirname + "/views");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/api/productos", productos);
-app.use("/api/carrito", carritos)
-
-//******************** */
-//*******PASSPORT***** */
-//******************** */
 app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoUri,
@@ -104,9 +77,16 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
-
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/api/productos", productos);
+app.use("/api/carrito", carritos)
+app.use("/", usuariosRouter)
+
+//******************** */
+//*******PASSPORT***** */
+//******************** */
+
 
 
 
@@ -197,97 +177,6 @@ app.use(function (err, req, res, next) {
 })
 
 
-//rutas login y register
-
-app.get("/", (req, res) => {
-    if(req.isAuthenticated()){
-        res.redirect("/home")
-    }else{
-        res.render("login")
-    }
-})
-
-app.post("/login", passport.authenticate("login", {failureRedirect: "/failLogin"}), (req, res)=>{
-    if(req.isAuthenticated()){
-        res.redirect("/home")
-    }else{
-        res.redirect("/")
-    }
-})
-
-app.get("/failLogin", (req, res)=>{
-    res.render("failLogin")
-})
-
-app.get("/home", (req, res)=>{
-    if(req.isAuthenticated()){
-        res.render("home", {user: req.user})
-    }else{
-        res.redirect("/")
-    }
-})
-
-
-app.get("/carrito", (req, res)=>{
-    if(req.isAuthenticated()){
-        res.render("carrito")
-    }else{
-        res.redirect("/")
-    }
-})
-
-app.get("/logout", (req, res)=>{
-    req.logout((err) => {
-        if(!err){
-            res.redirect("/")
-        }
-    })
-    
-})
-
-app.get("/productos", (req, res)=>{
-    if(req.isAuthenticated()){
-        res.render("productos")
-    }else{
-        res.redirect("/")
-    }
-})
-
-
-
-app.get("/register", (req, res) => {
-    res.render("register")
-})
-
-
-app.post("/register",upload.single("avatar"), passport.authenticate("signup", {failureRedirect: "/failRegister"}), (req, res)=>{
-    res.redirect("/home")
-})
-
-
-app.get("/failRegister", (req, res) => {
-    res.render("failRegister")
-})
-
-
-app.post("/finalizarCompra", async (req, res)=> {
-    try {
-        const carrito = req.body
-        const usuario = req.user
-        sendEmailCarrito(usuario, carrito.carrito)
-        sendWsp(usuario, carrito.carrito)
-        sendSms(usuario)
-        res.send("Compra Finalizada!")
-    }catch(err){
-        logError.error(err);
-    }
-})
-
-app.get("/compraFinalizada", (req, res)=>{
-    res.render("compraFinalizada")
-})
-
-//rutas login y register
 
 app.get("*", (req, res)=>{
     res.json({
@@ -297,4 +186,3 @@ app.get("*", (req, res)=>{
         metodo: req.method
     })
 })
-

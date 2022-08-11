@@ -67,7 +67,7 @@ async function sendEmailRegister (user){
             </ul>`
         }
         const info = await transporter.sendMail(mailoptions);
-    } catch (error) {
+    } catch (err) {
         logError.error(err);
     }
 }
