@@ -1,5 +1,5 @@
 let admin = require("firebase-admin");
-const {Firebase} = require("..//config//global")
+const {Firebase} = require("../config/global")
 const FIREBASE_PATH = require(Firebase)
 const {logError, logConsola} = require("../logs/log4js")
 

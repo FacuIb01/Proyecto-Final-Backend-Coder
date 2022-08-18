@@ -1,27 +1,55 @@
-require(`dotenv`).config()
+const yargs = require("yargs")
+const args = require("../utils/yargs.js")
+console.log(args)
 
-const DAOCarritoArchivo = require("../daos//carritos//DAOcarritoArchivo")
-const DAOCarritoFB = require("../daos//carritos//DAOcarritoFB")
-const DAOCarritoMongoDB = require("../daos//carritos//DAOcarritoMongoDB")
+const DAOCarritoArchivo = require("./Carritos/DAOcarritoArchivo")
+const DAOCarritoFB = require("./Carritos/DAOcarritoFB")
+const DAOCarritoMongoDB = require("./Carritos/DAOcarritoMongoDB")
 
-const DAOProductosArchivo = require("../daos//productos//DAOProductosArchivo")
-const DAOProductosFB = require("../daos//productos//DAOProductosFireBase")
-const DAOProductosMongoDB = require("../daos//productos//DAOProductosMongoDB")
+const DAOProductosArchivo = require("./Productos/DAOProductosArchivo")
+const DAOProductosFB = require("./Productos/DAOProductosFireBase")
+const DAOProductosMongoDB = require("./Productos/DAOProductosMongoDB")
 
-if(process.env.DB === "firebase"){
-    module.exports= {
-        carritoDao: new DAOCarritoFB(),
-        productoDAO: new DAOProductosFB()
-    }
-}else if(process.env.DB === "Archivo"){
-    module.exports= {
-        carritoDao: new DAOCarritoArchivo(),
-        productoDAO: new DAOProductosArchivo()
-    }
-}else if(process.env.DB === "MongoDB"){
-    module.exports= {
-        carritoDao: new DAOCarritoMongoDB(),
-        productoDAO: new DAOProductosMongoDB()
+// if(process.env.DB === "firebase"){
+//     module.exports= {
+//         carritoDao: new DAOCarritoFB(),
+//         productoDAO: new DAOProductosFB()
+//     }
+// }else if(process.env.DB === "Archivo"){
+//     module.exports= {
+//         carritoDao: new DAOCarritoArchivo(),
+//         productoDAO: new DAOProductosArchivo()
+//     }
+// }else if(process.env.DB === "MongoDB"){
+//     module.exports= {
+//         carritoDao: new DAOCarritoMongoDB(),
+//         productoDAO: new DAOProductosMongoDB()
+//     }
+// }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+class dbFactory{
+    createDAOS(database = args.db){
+        if(database === "firebase"){
+            return {
+                carritoDao: new DAOCarritoFB(),
+                productoDAO: new DAOProductosFB()
+            }
+        }else if(database === "Archivo"){
+            return {
+                carritoDao: new DAOCarritoArchivo(),
+                productoDAO: new DAOProductosArchivo()
+            }
+        }else if(database === "MongoDB"){
+            return {
+                carritoDao: new DAOCarritoMongoDB(),
+                productoDAO: new DAOProductosMongoDB()
+            }
+        }
     }
 }
 
+let dao = new dbFactory()
+
+module.exports = dao.createDAOS()

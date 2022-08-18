@@ -1,14 +1,24 @@
 const schemaCarrito = require('../../models/schemaCarrito');
 const ContenedorMongo = require("../../Contenedores/contenedorMongoDB");
-const {logError, logConsola} = require("../../logs/log4js");
+const {logError} = require("../../logs/log4js");
+const DTOProductos = require("../../DTO/DTOProductos");
 
 
 class DAOcarrito extends ContenedorMongo{
+
+    static instancia
     constructor(){
         super(schemaCarrito);
         this.id = 1
         this.checkId()
+        if(!!DAOcarrito.instancia){
+            return DAOcarrito.instancia
+        }else{
+            DAOcarrito.instancia = this
+            return this
+        }
     }
+
 
     async checkId(){
         let carritos = await this.getAll()

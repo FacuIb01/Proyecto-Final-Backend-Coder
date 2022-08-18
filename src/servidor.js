@@ -16,6 +16,7 @@ const {sendEmailRegister} = require('./utils/sendEmail');
 
 const {logError, logConsola} = require('./logs/log4js');
 const usuariosRouter = require('./routes/usuariosRouter');
+const gzip = require('compression');
 
 const advancedOptions = {
     useNewUrlParser: true,
@@ -79,6 +80,7 @@ app.use(session({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(gzip());
 app.use("/api/productos", productos);
 app.use("/api/carrito", carritos)
 app.use("/", usuariosRouter)

@@ -2,13 +2,19 @@ const fs = require('fs');
 const ContenedorArchivo = require('../../Contenedores/contenedorArchivos');
 
 class DAOproductosArchivo extends ContenedorArchivo{
+    static instance
     constructor(){
         super("db/productos.json")
+        if(!!DAOproductosArchivo.instance){
+            return DAOproductosArchivo.instance
+        }else{
+            DAOproductosArchivo.instance = this
+            return this
+        }
     }
     save(objeto){
         try{
             let data = fs.readFileSync(this.ruta, 'utf8');
-            objeto.id = this.id;
             let array = JSON.parse(data);
             array.push(objeto);
             fs.writeFileSync(this.ruta, JSON.stringify(array,null,2));

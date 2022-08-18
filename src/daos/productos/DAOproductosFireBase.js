@@ -1,12 +1,19 @@
 const ContenedorFB = require('../../Contenedores/contenedorFireBase');
-const { logError } = require('../..//logs/log4js');
+const { logError } = require('../../logs/log4js');
 
 
 class DAOfireBase extends ContenedorFB{
+    static instance
     constructor(){
         super("productos")
         this.id = 0
         this.checkId()
+        if(!!DAOfireBase.instance){
+            return DAOfireBase.instance
+        }else{
+            DAOfireBase.instance = this
+            return this
+        }
     }
 
     async checkId(){

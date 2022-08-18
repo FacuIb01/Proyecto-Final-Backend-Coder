@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {mongoUri} = require("../config/global")
-const logjs = require("../logs/log4js");
 const {logError, logConsola} = require("../logs/log4js");
+const DTOproductos = require("../DTO/DTOProductos");
 
 
 
@@ -11,7 +11,6 @@ class ContenedorMongo {
         mongoose.connect(mongoUri, {useNewUrlParser: true, useUnifiedTopology: true})
         logConsola.info("Conectado a MongoDB")
         this.model = model
-
     }
 
 

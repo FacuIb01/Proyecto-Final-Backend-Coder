@@ -3,10 +3,17 @@ const ContenedorFB = require('../../Contenedores/contenedorFireBase.js')
 
 
 class CarritoFB extends ContenedorFB{
+    static instance
     constructor(){
         super("carritos")
         this.id = 1
         this.checkId()
+        if(!!CarritoFB.instance){
+            return CarritoFB.instance
+        }else{
+            CarritoFB.instance = this
+            return this
+        }
     }
 
     async checkId(){
@@ -26,7 +33,7 @@ class CarritoFB extends ContenedorFB{
         return true
     }
 
-    async getProductos(id){
+    async getProductos(id){ //devuelve los productos del carrito
         let carrito = this.collection.doc(`${id}`)
         let productos = await carrito.get()
         return productos.data().productos
@@ -53,6 +60,7 @@ class CarritoFB extends ContenedorFB{
     }
 
 }
+
 
 
 

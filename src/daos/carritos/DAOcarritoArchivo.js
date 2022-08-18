@@ -4,8 +4,15 @@ const {logError, logConsola} = require("../../logs/log4js")
 
 
 class DAOcarritoArchivo extends Carrito{
+    static instance
     constructor(){
         super("db/carrito.json") //cambiar el path
+        if(!!DAOcarritoArchivo.instance){
+            return DAOcarritoArchivo.instance
+        }else{
+            DAOcarritoArchivo.instance = this
+            return this
+        }
     }
 
     save(){
