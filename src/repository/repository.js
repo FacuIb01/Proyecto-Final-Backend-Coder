@@ -9,6 +9,7 @@ class RepositoryProductos{
     async getAll(){
         let productos = await this.dao.getAll()
         let productosDTO = productos.map(producto => productoDTO(producto))
+        console.log(productosDTO)
         return productosDTO
     }
 

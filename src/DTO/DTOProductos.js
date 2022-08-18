@@ -1,7 +1,13 @@
 function productoDTO (productos, id){
-    return {
-        ...productos,
-        id,
+
+    if(!id){
+        return productos
+    }else{
+        let producto = {
+            ...productos,
+            id: id
+        }
+        return producto
     }
 }
 

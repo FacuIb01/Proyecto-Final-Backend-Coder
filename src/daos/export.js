@@ -1,6 +1,4 @@
-const yargs = require("yargs")
 const args = require("../utils/yargs.js")
-console.log(args)
 
 const DAOCarritoArchivo = require("./Carritos/DAOcarritoArchivo")
 const DAOCarritoFB = require("./Carritos/DAOcarritoFB")
@@ -30,7 +28,7 @@ const DAOProductosMongoDB = require("./Productos/DAOProductosMongoDB")
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 class dbFactory{
-    createDAOS(database = args.db){
+    createDAOS(database = args.db ? args.db : "MongoDB"){
         if(database === "firebase"){
             return {
                 carritoDao: new DAOCarritoFB(),
