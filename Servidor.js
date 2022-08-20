@@ -1,21 +1,21 @@
 const express = require('express');
 const session = require('express-session');
-const carritos  = require('./Routes/CarritoRouter.js');
-const productos = require('./Routes/ProductosRouter.js');
+const carritos  = require('./Src/Routes/CarritoRouter.js');
+const productos = require('./Src/Routes/ProductosRouter.js');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const UserModel = require('./Models/UsuariosModel');
+const UserModel = require('./Src/Models/UsuariosModel');
 const cluster = require('cluster');
-const {mongoUri, modo, PORT} = require('./config/global.js')
+const {mongoUri, modo, PORT} = require('./Src/config/global.js')
 const handlebars = require('express-handlebars');
 const path = require('path');
-const createHash = require('./Utils/HashGenerator');
-const {passValidator} = require('./Utils/PassValidator');
-const {sendEmailRegister} = require('./Utils/SendEmail');
+const createHash = require('./Src/Utils/HashGenerator');
+const {passValidator} = require('./Src/Utils/PassValidator');
+const {sendEmailRegister} = require('./Src/Utils/SendEmail');
 
-const {logError, logConsola} = require('./Logs/Log4js');
-const usuariosRouter = require('./Routes/UsuariosRouter');
+const {logError, logConsola} = require('./Src/Logs/Log4js');
+const usuariosRouter = require('./Src/Routes/UsuariosRouter');
 const gzip = require('compression');
 
 const advancedOptions = {
