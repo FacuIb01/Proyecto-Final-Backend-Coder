@@ -5,7 +5,7 @@
   "main": "productos.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/servidor.js"
+    "start": "node Src/Servidor.js"
   },
   "keywords": [],
   "author": "",
