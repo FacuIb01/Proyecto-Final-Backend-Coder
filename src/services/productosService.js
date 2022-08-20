@@ -1,4 +1,4 @@
-const productosRepository = require("../repository/repository.js")
+const productosRepository = require("../Repository/Repository.js")
 
 
 

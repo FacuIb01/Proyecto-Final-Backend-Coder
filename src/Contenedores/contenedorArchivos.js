@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {logError} = require("../logs/log4js")
+const {logError} = require("../Logs/Log4js")
 
 class ContenedorArchivo {
     constructor(ruta) {

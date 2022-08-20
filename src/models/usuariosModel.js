@@ -1,6 +1,6 @@
 let mongoose = require("mongoose")
 const {mongoUri} = require('../config/global.js')
-const {logError, logConsola} = require('../logs/log4js')
+const {logError, logConsola} = require('../Logs/Log4js')
 
 
 mongoose.connect(mongoUri,{useNewUrlParser: true, useUnifiedTopology: true},  (err, res) => {

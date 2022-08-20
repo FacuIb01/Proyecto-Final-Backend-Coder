@@ -1,6 +1,6 @@
-const schemaCarrito = require('../../models/schemaCarrito');
-const ContenedorMongo = require("../../Contenedores/contenedorMongoDB");
-const {logError} = require("../../logs/log4js");
+const schemaCarrito = require('../../Models/SchemaCarrito');
+const ContenedorMongo = require("../../Contenedores/ContenedorMongoDB");
+const {logError} = require("../../Logs/Log4js");
 const DTOProductos = require("../../DTO/DTOProductos");
 
 

@@ -1,7 +1,7 @@
 const {Router} = require("express")
 const productos = Router()
 
-const productosController = require("../controllers/productosController")
+const productosController = require("../Controllers/ProductosController")
 
 
 productos.get("/:id?", productosController.productos) 

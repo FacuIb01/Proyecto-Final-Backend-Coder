@@ -2,7 +2,7 @@ require(`dotenv`).config()
 const nodemailer = require('nodemailer');
 const email = process.env.EMAIL
 
-const { logError} = require("../logs/log4js");
+const { logError} = require("../Logs/Log4js");
 
 const transporter = nodemailer.createTransport({
     tls:{

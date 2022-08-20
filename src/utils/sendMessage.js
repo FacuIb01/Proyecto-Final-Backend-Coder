@@ -3,7 +3,7 @@ const numeroWsp = process.env.WSP
 const twilio = require('twilio');
 const authToken = "2f90f538ff8f45bd23b4c188646267a1";
 const accountSid = "AC87c21f570fdd185038bb64a2e8ce70d0"
-const {logConsola, logError} = require("../logs/log4js");
+const {logConsola, logError} = require("../Logs/Log4js");
 
 const client = twilio(accountSid, authToken);
 

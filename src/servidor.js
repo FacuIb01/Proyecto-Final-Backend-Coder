@@ -1,21 +1,21 @@
 const express = require('express');
 const session = require('express-session');
-const carritos  = require('./routes/carritoRouter.js');
-const productos = require('./routes/productosRouter.js');
+const carritos  = require('./Routes/CarritoRouter.js');
+const productos = require('./Routes/ProductosRouter.js');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const UserModel = require('./models/usuariosModel');
+const UserModel = require('./Models/UsuariosModel');
 const cluster = require('cluster');
 const {mongoUri, modo, PORT} = require('./config/global.js')
 const handlebars = require('express-handlebars');
 const path = require('path');
-const createHash = require('./utils/hashGenerator');
-const {passValidator} = require('./utils/passValidator');
-const {sendEmailRegister} = require('./utils/sendEmail');
+const createHash = require('./Utils/HashGenerator');
+const {passValidator} = require('./Utils/PassValidator');
+const {sendEmailRegister} = require('./Utils/SendEmail');
 
-const {logError, logConsola} = require('./logs/log4js');
-const usuariosRouter = require('./routes/usuariosRouter');
+const {logError, logConsola} = require('./Logs/Log4js');
+const usuariosRouter = require('./Routes/UsuariosRouter');
 const gzip = require('compression');
 
 const advancedOptions = {

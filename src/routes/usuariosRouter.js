@@ -1,8 +1,8 @@
 const {Router } = require("express")
 const passport = require('passport');
 const usuariosRouter = Router()
-const upload = require('../utils/multer')
-const usuariosController = require('../controllers/usuariosController.js')
+const upload = require('../Utils/Multer')
+const usuariosController = require('../Controllers/UsuariosController.js')
 
 
 

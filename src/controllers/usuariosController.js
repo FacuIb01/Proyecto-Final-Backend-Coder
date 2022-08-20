@@ -1,5 +1,5 @@
-const {sendEmailCarrito} = require('../utils/sendEmail.js');
-const {sendSms, sendWsp} = require('../utils/sendMessage.js');
+const {sendEmailCarrito} = require('../Utils/SendEmail.js');
+const {sendSms, sendWsp} = require('../Utils/SendMessage.js');
 
 async function inicio (req, res) {
     if(req.isAuthenticated()){

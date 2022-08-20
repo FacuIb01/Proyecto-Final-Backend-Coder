@@ -1,4 +1,4 @@
-const  {productoDAO} = require("../Daos/export.js")
+const  {productoDAO} = require("../Daos/Export.js")
 const productoDTO = require("../DTO/DTOProductos")
 
 class RepositoryProductos{
@@ -9,7 +9,6 @@ class RepositoryProductos{
     async getAll(){
         let productos = await this.dao.getAll()
         let productosDTO = productos.map(producto => productoDTO(producto))
-        console.log(productosDTO)
         return productosDTO
     }
 
