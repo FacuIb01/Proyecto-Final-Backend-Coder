@@ -6,10 +6,10 @@ async function productos (req, res) {
         let id = req.params.id;
         if(!id){
             let productos = await productosService.traerProductos()
-            res.json(productos)
+            res.status(200).json(productos)
         }else{
             let producto = await productosService.traerProductos(id)
-            res.json(producto)
+            res.status(200).json(producto)
         }
     }catch(err){
         res.json({
@@ -23,7 +23,7 @@ async function guardarProducto (req, res) {
     try{
         let producto = req.body
         await productosService.guardarProducto(producto)
-        res.json({
+        res.status(200).json({
             mensaje: "Producto Añadido",
             producto,
         })
@@ -40,7 +40,7 @@ async function actualizarProducto (req, res) {
         let id = Number(req.params.id)
         let producto = req.body
         await productosService.actualizarProducto(id, producto)
-        res.json({
+        res.status(200).json({
             mensaje: "producto editado!",
             producto: req.body
         })
@@ -56,7 +56,7 @@ async function borrarProducto (req, res) {
     try{
         let id = Number(req.params.id)
         await productosService.borrarProducto(id)
-        res.send("Producto Eliminado!")
+        res.status(200).send("Producto Eliminado!")
     }catch(error){
         res.json({
             mensaje: "Error al eliminar el producto",
