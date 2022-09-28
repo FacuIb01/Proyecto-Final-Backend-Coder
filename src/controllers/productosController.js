@@ -1,5 +1,5 @@
-const productosService = require("../Services/ProductosService")
-
+const { logError } = require("../logs/log4js");
+const productosService = require("../services/productosService")
 
 async function productos (req, res) {
     try{
@@ -82,10 +82,29 @@ async function guardarEnCarrito (req, res) {
     }
 }
 
+async function productosCategoria (req, res) {
+    try {
+        let categoria = req.params.categoria
+        let productos = await productosService.traerProductosCategoria(categoria)
+        console.log(productos)
+        res.json({
+            mensaje: "productos filtrado por categoria",
+            productos: productos
+        })
+    } catch (error) {
+        logError.error(error)
+        res.json({
+            mensaje: "error al buscar productos",
+            error: "que pedo"
+        })
+    }
+}
+
 module.exports = {
     productos,
     guardarProducto,
     actualizarProducto,
     borrarProducto,
     guardarEnCarrito,
+    productosCategoria,
 }

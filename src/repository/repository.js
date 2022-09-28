@@ -1,5 +1,5 @@
-const  {productoDAO} = require("../Daos/Export.js")
-const productoDTO = require("../DTO/DTOProductos")
+const  {productoDAO} = require("../daos/export.js")
+const productoDTO = require("../dto/DTOProductos")
 
 class RepositoryProductos{
     constructor(){
@@ -33,6 +33,12 @@ class RepositoryProductos{
         this.dao.deleteById(id)
         return true
     }
+
+    async getByCategoria(categoria){
+        let productos = await this.dao.getByCategory(categoria)
+        return productos
+    }
 }
+
 
 module.exports =  new RepositoryProductos;

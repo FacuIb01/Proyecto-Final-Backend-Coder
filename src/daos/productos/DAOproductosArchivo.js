@@ -1,5 +1,5 @@
 const fs = require('fs');
-const ContenedorArchivo = require('../../Contenedores/ContenedorArchivos');
+const ContenedorArchivo = require('../../contenedores/contenedorArchivos');
 
 class DAOproductosArchivo extends ContenedorArchivo{
     static instance

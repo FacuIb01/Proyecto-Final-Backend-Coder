@@ -1,4 +1,4 @@
-const ContenedorFB = require('../../Contenedores/ContenedorFireBase.js')
+const ContenedorFB = require('../../contenedores/contenedorFireBase.js')
 
 
 

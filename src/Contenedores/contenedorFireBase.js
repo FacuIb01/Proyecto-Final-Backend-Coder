@@ -1,7 +1,7 @@
 let admin = require("firebase-admin");
 const {Firebase} = require("../config/global")
 const FIREBASE_PATH = require(Firebase)
-const {logError, logConsola} = require("../Logs/Log4js")
+const {logError, logConsola} = require("../logs/log4js")
 
 
 admin.initializeApp({

@@ -1,7 +1,7 @@
-const schemaCarrito = require('../../Models/SchemaCarrito');
-const ContenedorMongo = require("../../Contenedores/ContenedorMongoDB");
-const {logError} = require("../../Logs/Log4js");
-const DTOProductos = require("../../DTO/DTOProductos");
+const schemaCarrito = require('../../models/schemaCarrito');
+const ContenedorMongo = require("../../contenedores/contenedorMongoDB");
+const {logError} = require("../../logs/log4js");
+const DTOProductos = require("../../dto/DTOProductos");
 
 
 class DAOcarrito extends ContenedorMongo{
@@ -26,6 +26,7 @@ class DAOcarrito extends ContenedorMongo{
             this.id = parseInt(carritos[carritos.length - 1].id) + 1
         }
     }
+
     async save(){
         try {
             let carrito ={
@@ -38,6 +39,7 @@ class DAOcarrito extends ContenedorMongo{
             logError.error(err);
         }
     }
+
     async añadirProducto(id, producto){
             try{
                 let carrito = await this.model.find({id: id})

@@ -5,13 +5,14 @@ describe("Test de pruebas de API productos", function () {
 
     it("Traer todos los productos", async function (){
         const productos = await request.get("/api/productos/")
-        console.log(productos._body)
+
+
         expect(productos.status).to.eql(200)
     })
 
     it("Traer un solo producto mediante id", async () => {
         const producto = await request.get("/api/productos/1")
-        console.log(producto._body)
+
         expect(producto.status).to.eql(200)
         expect(producto._body.id).to.eql(1)
     })

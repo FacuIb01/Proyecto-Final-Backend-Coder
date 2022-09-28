@@ -1,6 +1,6 @@
-const productosSchema = require('../../Models/SchemaProductos');
-const ContenedorMongoDB = require('../../Contenedores/ContenedorMongoDB');
-const { logError, logConsola } = require('../../Logs/Log4js');
+const productosSchema = require('../../models/schemaProductos');
+const ContenedorMongoDB = require('../../contenedores/contenedorMongoDB');
+const { logError, logConsola } = require('../../logs/log4js');
 
 class DAOproductosMongoDB extends ContenedorMongoDB{
     
@@ -28,11 +28,21 @@ class DAOproductosMongoDB extends ContenedorMongoDB{
 
     async save(producto){
         try {
+            producto.id = this.id
             let productoAGuardar = await this.model.create(producto)
             logConsola.info("Guardado" + productoAGuardar)
             this.id++
         } catch (error) {
             logError.error(err);
+        }
+    }
+
+    async getByCategory(category) {
+        try {
+            let productos = await this.model.find({"categoria": category})
+            return productos
+        } catch (error) {
+            logError.error(error)
         }
     }
 }

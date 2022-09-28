@@ -1,0 +1,40 @@
+{{> header}}
+
+<section id="chatSection">
+    <div id="chatMensajes">
+
+    </div>
+    <form id="chatForm">
+        <input type="text" name="mensaje" id="mensaje" placeholder="Enviar un mensaje...">
+    </form>
+        <button onClick="enviarMensaje(`{{user}}`)">Enviar</button>
+</section>
+
+<script type="text/javascript">
+    const socket = io()
+    socket.on("mensajes", (data) => {
+        const mensajes = document.getElementById("chatMensajes")
+        let html =data.map((e)=> {
+            return (
+                `<div class="mensajeEnviado">
+                    <h6>${e.usuario} || ${e.timestamp}</h6>
+                        <p>${e.mensaje}.</p>
+                </div>`
+            )
+        }).join(" ")
+
+        mensajes.innerHTML = html
+    })
+
+    function enviarMensaje(email){
+        let mensaje = document.getElementById("mensaje").value
+        let data = {
+            mensaje: mensaje,
+            usuario: email
+        }
+
+        socket.emit("enviarMensajes", data)
+        document.getElementById("mensaje").value = ""
+    }
+    
+</script>

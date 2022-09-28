@@ -1,21 +1,23 @@
 const express = require('express');
 const session = require('express-session');
-const carritos  = require('./Src/Routes/CarritoRouter.js');
-const productos = require('./Src/Routes/ProductosRouter.js');
+const carritos  = require('./src/routes/carritoRouter.js');
+const productos = require('./src/routes/productosRouter.js');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const UserModel = require('./Src/Models/UsuariosModel');
+const UserModel = require('./src/models/usuariosModel');
 const cluster = require('cluster');
-const {mongoUri, modo, PORT} = require('./Src/config/global.js')
+const {mongoUri, modo, PORT} = require('./src/config/global.js')
 const handlebars = require('express-handlebars');
 const path = require('path');
-const createHash = require('./Src/Utils/HashGenerator');
-const {passValidator} = require('./Src/Utils/PassValidator');
-const {sendEmailRegister} = require('./Src/Utils/SendEmail');
+const createHash = require('./src/utils/hashGenerator');
+const {passValidator} = require('./src/utils/passValidator');
+const {sendEmailRegister} = require('./src/utils/sendEmail');
 
-const {logError, logConsola} = require('./Src/Logs/Log4js');
-const usuariosRouter = require('./Src/Routes/UsuariosRouter');
+const DAOChatMongoDB = require("./src/daos/chat/DAOChatMongoDB")
+const chat = new DAOChatMongoDB()
+const {logError, logConsola} = require('./src/logs/log4js');
+const usuariosRouter = require('./src/routes/usuariosRouter');
 const gzip = require('compression');
 
 const advancedOptions = {
@@ -24,6 +26,10 @@ const advancedOptions = {
 }
 
 const app = express();
+const {Server: IOServer } = require('socket.io');
+const {Server: HTTPServer} = require('http')
+const https = new HTTPServer(app)
+const io = new IOServer(https)
 
 
 if(cluster.isMaster && modo === 'cluster'){
@@ -36,7 +42,10 @@ if(cluster.isMaster && modo === 'cluster'){
         cluster.fork()
     }
 )}else{
-    app.listen(PORT, () => {
+    // app.listen(PORT, () => {
+    //     logConsola.info(`Servidor corriendo en el puerto ${PORT}`)
+    // })
+    https.listen(PORT, () => {
         logConsola.info(`Servidor corriendo en el puerto ${PORT}`)
     })
 }
@@ -50,8 +59,8 @@ if(cluster.isMaster && modo === 'cluster'){
 app.engine("hbs", handlebars.engine({
     extname: ".hbs", ///extension of the file
     defaultLayout: "index.hbs", ///layout por defecto
-    layoutsDir: __dirname + "/views/layouts",  ///ruta de los layouts
-    partialDir: __dirname + "/views/partials", ///ruta de los partials
+    layoutsDir: __dirname + "/src/views/layouts",  ///ruta de los layouts
+    partialDir: __dirname + "/src/views/partials", ///ruta de los partials
     runtimeOptions: {
         allowProtoPropertiesByDefault: true,
         allowProtoMethodsByDefault: true,
@@ -59,7 +68,7 @@ app.engine("hbs", handlebars.engine({
 }))
 
 app.set('view engine', 'hbs');
-app.set('views', __dirname + "/views");
+app.set('views', __dirname + "/src/views");
 
 //************** */
 //**** HANDLEBARS*****/
@@ -67,7 +76,7 @@ app.set('views', __dirname + "/views");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/src/public')));
 app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoUri,
@@ -147,7 +156,6 @@ passport.use("signup", new LocalStrategy({passReqToCallback: true},(req, usernam
             })
 
             sendEmailRegister(newUser)
-    
         })
         
     } catch (error) {
@@ -168,6 +176,31 @@ passport.deserializeUser((id, callback) => {
 //******************** */
 //*******PASSPORT***** */
 //******************** */
+
+
+
+//******************** */
+//*******SOCKET***** */
+//******************** */
+
+io.on("connection", async (socket) => {
+    const mensajes = await chat.getAll()
+
+    socket.emit("mensajes", mensajes)
+
+    socket.on("enviarMensajes",async (data) => {
+        await chat.save(data)
+        
+        socket.emit("mensajes", await chat.getAll())
+    })
+})
+
+
+
+//******************** */
+//*******SOCKET***** */
+//******************** */
+
 
 
 app.use(function (err, req, res, next) {

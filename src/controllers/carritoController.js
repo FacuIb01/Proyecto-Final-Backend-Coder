@@ -1,4 +1,5 @@
-const carritoService = require("../Services/CarritoService")
+const { logError } = require("../logs/log4js")
+const carritoService = require("../services/carritoService")
 
 
 async function crearCarrito (req, res) {
@@ -23,6 +24,7 @@ async function borrarCarrito (req, res) {
             mensaje: "Error al eliminar el carrito",
             error
         })
+        logError.error(error)
     }
 }
 async function obtenerProductosCarrito (req, res) {

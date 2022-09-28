@@ -1,9 +1,9 @@
 require('dotenv').config();
 const numeroWsp = process.env.WSP 
 const twilio = require('twilio');
-const authToken = "2f90f538ff8f45bd23b4c188646267a1";
+const authToken = "eeac5b6b39ed6e570802f1743155837b";
 const accountSid = "AC87c21f570fdd185038bb64a2e8ce70d0"
-const {logConsola, logError} = require("../Logs/Log4js");
+const {logConsola, logError} = require("../logs/log4js");
 
 const client = twilio(accountSid, authToken);
 
@@ -15,7 +15,7 @@ async function sendSms(usuario){
         const message = await client.messages.create({
             body: `Su pedido ha sido recibido y esta en proceso.`,
             from: "+13203968507",
-            to: `+${usuario.numero}`
+            to: `+54${usuario.numero}`
         })
         logConsola.info("Enviado" + message)
     } catch (err) {

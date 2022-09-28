@@ -1,4 +1,4 @@
-const {carritoDao} = require("../Daos/Export");
+const {carritoDao} = require("../daos/export");
 
 async function crearCarrito () {
     try{
@@ -9,7 +9,7 @@ async function crearCarrito () {
     }
 }
 
-async function borrarCarrito(id){
+async function deleteById(id){
     try{
         await carritoDao.deleteById(id)
         return true
@@ -40,7 +40,7 @@ async function eliminarProductos(idCarrito, idProducto){
 
 module.exports = {
     crearCarrito,
-    borrarCarrito,
+    deleteById,
     obtenerProductos,
     eliminarProductos,
 }

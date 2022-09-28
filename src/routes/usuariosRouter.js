@@ -1,8 +1,8 @@
 const {Router } = require("express")
 const passport = require('passport');
 const usuariosRouter = Router()
-const upload = require('../Utils/Multer')
-const usuariosController = require('../Controllers/UsuariosController.js')
+const upload = require('../utils/multer')
+const usuariosController = require('../controllers/usuariosController.js')
 
 
 
@@ -21,7 +21,7 @@ usuariosRouter.get("/logout", usuariosController.logout)
 
 usuariosRouter.get("/register", usuariosController.register)
 
-usuariosRouter.post("/register",upload.single("avatar"), passport.authenticate("signup", {failureRedirect: "/failRegister"}),)
+usuariosRouter.post("/register",upload.single("avatar"), passport.authenticate("signup", {failureRedirect: "/failRegister", successRedirect: "/home"}),)
 
 usuariosRouter.get("/failRegister", usuariosController.failRegister)
 
@@ -32,6 +32,10 @@ usuariosRouter.post("/finalizarCompra", usuariosController.finalizarCompra)
 
 
 usuariosRouter.get("/compraFinalizada", usuariosController.compraFinalizada)
+
+usuariosRouter.get("/chat", usuariosController.chat)
+
+usuariosRouter.get("/chat/:email", usuariosController.chatPropio)
 
 
 

@@ -1,7 +1,6 @@
-const productosRepository = require("../Repository/Repository.js")
-
-
-
+const productosRepository = require("../repository/repository.js")
+const {carritoDao} = require("../daos/export");
+const { logError } = require("../logs/log4js.js");
 
 
 async function traerProductos (id){
@@ -15,7 +14,7 @@ async function traerProductos (id){
             return producto
         }
     }catch(err){
-        console.log(err)
+        logError.error(error)
     }
 }
 
@@ -25,7 +24,7 @@ async function guardarEnCarrito (idCarrito, idProducto){
         await carritoDao.añadirProducto(idCarrito, producto)
         return producto
     } catch (error) {
-        console.log(error)
+        logError.error(error)
     }
 }
 
@@ -34,7 +33,7 @@ async function borrarProducto(id){
         await productosRepository.deleteById(id)
         return true
     } catch (error) {
-        console.log(error)
+        logError.error(error)
     }
 }
 async function actualizarProducto(id, producto){
@@ -42,7 +41,7 @@ async function actualizarProducto(id, producto){
         await productosRepository.update(id, producto)
         return true
     } catch (error) {
-        console.log(error)
+        logError.error(error)
     }
 }
 
@@ -53,7 +52,16 @@ async function guardarProducto(producto){
         await productosRepository.save(producto)
         return true
     }catch (error) {
-        console.log(error)
+        logError.error(error)
+    }
+}
+
+async function traerProductosCategoria(categoria){
+    try {
+        let productos = await productosRepository.getByCategoria(categoria)
+        return productos
+    } catch (error) {
+        logError.error(error)
     }
 }
 
@@ -64,4 +72,5 @@ module.exports ={
     borrarProducto,
     actualizarProducto,
     guardarProducto,
+    traerProductosCategoria,
 }

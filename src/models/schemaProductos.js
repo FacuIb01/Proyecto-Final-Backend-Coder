@@ -8,6 +8,7 @@ const productosSchema = new mongoose.Schema({
     descripcion: {type: String, required: true},
     timestamp: {type: String, required: true, default: Date.now()},
     codigo: {type: Number, required: true},
+    categoria: {type: String, required: true},
     id:{type: Number, required: true}
 })
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {mongoUri} = require("../config/global")
-const {logError, logConsola} = require("../Logs/Log4js");
-const DTOproductos = require("../DTO/DTOProductos");
+const {logError, logConsola} = require("../logs/log4js");
+const DTOproductos = require("../dto/DTOProductos");
 
 
 

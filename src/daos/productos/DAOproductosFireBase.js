@@ -1,5 +1,5 @@
-const ContenedorFB = require('../../Contenedores/ContenedorFireBase');
-const { logError } = require('../../Logs/Log4js');
+const ContenedorFB = require('../../contenedores/contenedorFireBase');
+const { logError } = require('../../logs/log4js');
 
 
 class DAOfireBase extends ContenedorFB{

@@ -1,6 +1,6 @@
 const express = require('express');
 const carritos = express.Router();
-const carritoController =  require("../Controllers/CarritoController");
+const carritoController =  require("../controllers/carritoController");
 
 
 carritos.post("/", carritoController.crearCarrito)

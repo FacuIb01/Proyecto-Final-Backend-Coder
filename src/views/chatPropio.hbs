@@ -1,0 +1,15 @@
+{{> header}}
+
+{{#if mensajes}}
+<section id="sectionMensajesPropios">
+    <h1>Mensajes Enviados</h1>
+    <div id="eachMensajes">
+    {{#each mensajes}}
+        <div class="mensajeUsuario">
+            <p class="emailMensaje">email: {{this.usuario}}</p>
+            <p class="contenidoMensaje">mensaje: {{this.mensaje}}</p>
+        </div>
+    {{/each }}
+    </div>
+</section>
+{{/if}}

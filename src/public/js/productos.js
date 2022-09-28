@@ -3,7 +3,6 @@ let productoss = ""
 
 async function productos () {
     fetch("/api/productos/").then(res => res.json()).then(productos => {
-        console.log(productos)
         productos.forEach((producto, index) => {
             div.innerHTML += `<div class="card" style="width: 18rem;">
             <img src="{{img}}" class="card-img-top" alt="...">
@@ -31,14 +30,3 @@ function funcion(index){
 
 productos()
 
-
-
-/* <div class="card" style="width: 18rem;">
-<img src="{{img}}" class="card-img-top" alt="...">
-<div class="card-body">
-    <h5 class="card-title">{{nombre}}</h5>
-    <p class="card-text">{{descripcion}}</p>
-    <p class="card-text">{{precio}}</p>
-    <a href="#" class="btn btn-primary" >Comprar</a>
-</div>
-</div> */

@@ -1,6 +1,6 @@
 const fs = require('fs');
-const Carrito = require(`../../Contenedores/ContenedorArchivos.js`)
-const {logError, logConsola} = require("../../Logs/Log4js")
+const Carrito = require(`../../contenedores/contenedorArchivos.js`)
+const {logError, logConsola} = require("../../logs/log4js")
 
 
 class DAOcarritoArchivo extends Carrito{
