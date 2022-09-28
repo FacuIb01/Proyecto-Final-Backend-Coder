@@ -44,8 +44,21 @@ class DAOproductosArchivo extends ContenedorArchivo{
             return logError.error(err);
         }
     }
+
+    getByCategory(categoria){
+        let data = fs.readFileSync(this.ruta, 'utf8');
+        try{
+            let array = JSON.parse(data);
+            let objeto = array.find(obj => obj.categoria == categoria);
+            if(objeto === undefined){
+                return undefined
+            }
+            return objeto
+        }catch(err){
+            return logError.error(err);
+        }
+    }
 }
 
-let dao = new DAOproductosArchivo();
 
 module.exports = DAOproductosArchivo;

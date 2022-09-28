@@ -26,6 +26,7 @@ class DAOChatMongoDB extends ContenedorMongoDB{
         }
     }
 
+    //guarda un mensaje
     async save(mensaje){
         try {
             mensaje.id = this.id
@@ -37,6 +38,7 @@ class DAOChatMongoDB extends ContenedorMongoDB{
         }
     }
     
+    //obtiene todos los mensajes de un usuario en especifico
     async getByUser(user){
         try {
             let mensajes = await this.model.find({"usuario": user})

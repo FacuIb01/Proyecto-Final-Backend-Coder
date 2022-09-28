@@ -19,7 +19,7 @@ class ContenedorMongo {
         try {
             let productos = await this.model.find()
             return productos
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }
@@ -28,13 +28,13 @@ class ContenedorMongo {
         try {
             let producto = await this.model.find({"id": id})
             return producto[0]
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }
 
 
-    //"updates" debe ser un objeto con los campos a actualizar, lo mismo con "condicion".
+    //"updates" debe ser un objeto con los campos a actualizar, "id" debe ser el id del documento a modificar.
     async update(id, updates){
         try{
             let producto = await this.model.updateOne({id: id}, {$set: updates})
@@ -46,7 +46,7 @@ class ContenedorMongo {
     async deleteById(id){
         try {
             let borrar = await this.model.deleteOne({id: id})
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }

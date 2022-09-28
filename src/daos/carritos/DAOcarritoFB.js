@@ -22,41 +22,59 @@ class CarritoFB extends ContenedorFB{
             this.id = parseInt(carritos[carritos.length - 1].id) + 1
         }
     }
+
+    //crea un carrito
     async save(){
-        let carrito = this.collection.doc(`${this.id}`)
-        await carrito.create({
-            id: this.id,
-            timestamp: Date.now(),
-            productos: []
-        })
-        this.id++
-        return true
+        try {
+            let carrito = this.collection.doc(`${this.id}`)
+            await carrito.create({
+                id: this.id,
+                timestamp: Date.now(),
+                productos: []
+            })
+            this.id++
+            return true
+        } catch (err) {
+            logError.error(err);
+        }
     }
 
     async getProductos(id){ //devuelve los productos del carrito
-        let carrito = this.collection.doc(`${id}`)
-        let productos = await carrito.get()
-        return productos.data().productos
+        try {
+            let carrito = this.collection.doc(`${id}`)
+            let productos = await carrito.get()
+            return productos.data().productos
+        } catch (err) {
+            logError.error(err);
+        }
     }
 
 
     async añadirProducto(id, producto){
-        let carrito = this.collection.doc(`${id}`)
-        let productos = await carrito.get()
-        let productosCarrito = productos.data()
-        productosCarrito.productos.push(producto)
-        await carrito.update(productosCarrito)
-        return true
+        try {
+            let carrito = this.collection.doc(`${id}`)
+            let productos = await carrito.get()
+            let productosCarrito = productos.data()
+            productosCarrito.productos.push(producto)
+            await carrito.update(productosCarrito)
+            return true
+        } catch (err) {
+            logError.error(err);
+        }
     }
 
     async eliminarProducto(idCarrito, idProducto){
-        let carritoEncontrado = this.collection.doc(`${idCarrito}`)
-        let carrito = await carritoEncontrado.get()
-        let carritoInfo = carrito.data()
-        let index = carritoInfo.productos.findIndex(e => e.id == idProducto)
-        carritoInfo.productos.splice(index, 1)
-        await carritoEncontrado.update(carritoInfo)
-        return true
+        try {
+            let carritoEncontrado = this.collection.doc(`${idCarrito}`)
+            let carrito = await carritoEncontrado.get()
+            let carritoInfo = carrito.data()
+            let index = carritoInfo.productos.findIndex(e => e.id == idProducto)
+            carritoInfo.productos.splice(index, 1)
+            await carritoEncontrado.update(carritoInfo)
+            return true
+        } catch (err) {
+            logError.error(err);
+        }
     }
 
 }

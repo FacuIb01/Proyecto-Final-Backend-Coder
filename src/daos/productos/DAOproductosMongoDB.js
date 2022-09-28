@@ -32,7 +32,7 @@ class DAOproductosMongoDB extends ContenedorMongoDB{
             let productoAGuardar = await this.model.create(producto)
             logConsola.info("Guardado" + productoAGuardar)
             this.id++
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }

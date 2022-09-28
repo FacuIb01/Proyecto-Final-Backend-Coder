@@ -35,7 +35,7 @@ class DAOcarrito extends ContenedorMongo{
             }
             await this.model.create(carrito)
             this.id++
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }
@@ -56,7 +56,7 @@ class DAOcarrito extends ContenedorMongo{
             let carrito = await this.model.find({id:id})
             let productos = carrito[0].productos
             return productos
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }
@@ -68,7 +68,7 @@ class DAOcarrito extends ContenedorMongo{
             carrito[0].productos.splice(index, 1)
             await this.model.updateOne({id:idCarrito}, {productos: carrito[0].productos})
             return "borrado"
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
     }

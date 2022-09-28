@@ -28,9 +28,29 @@ class DAOfireBase extends ContenedorFB{
             let doc = this.collection.doc(`${this.id}`)
             await doc.create(producto)
             this.id++
-        } catch (error) {
+        } catch (err) {
             logError.error(err);
         }
+    }
+
+    async getByCategory(category){
+        try {
+            const productosRef = this.collection;
+            const snapshot = await productosRef.where('categoria', '==', category).get();
+            if (snapshot.empty) {
+            console.log('No matching documents.');
+            return;
+            }
+            const productos = []
+            
+            snapshot.forEach(doc => {
+            productos.push(doc.data())
+            });
+            return productos
+        } catch (err) {
+            logError.error(err);
+        }
+
     }
 }
 
